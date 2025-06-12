@@ -29,8 +29,6 @@
           propagatedBuildInputs = with pythonPackages; [
             pynvim
             mcp
-            msgpack
-            setuptools
           ];
 
           meta = {
@@ -48,8 +46,6 @@
               p: with p; [
                 pynvim
                 mcp
-                msgpack
-                setuptools
                 pytest
                 pytest-asyncio
                 black
