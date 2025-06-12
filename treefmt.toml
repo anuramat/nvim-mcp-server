@@ -1,0 +1,14 @@
+walk = "git"
+
+[formatter.nix]
+command = "nixfmt"
+includes = [ "*.nix" ]
+
+[formatter.python]
+command = "black"
+includes = [ "*.py" ]
+
+[formatter.markdown]
+command = "mdformat"
+options = [ "--wrap", "80" ]
+includes = [ "*.md" ]
