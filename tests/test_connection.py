@@ -4,7 +4,7 @@ import pytest
 import tempfile
 import os
 from unittest.mock import Mock, patch, MagicMock
-from nvim_mcp_server.connection import (
+from nvimcp.connection import (
     connect_neovim,
     ConnectionError,
     _connect_embedded,
@@ -12,7 +12,7 @@ from nvim_mcp_server.connection import (
 
 
 class TestConnectionManagement:
-    """Test Neovim connection functionality."""
+    """Test nvim connection functionality."""
 
     def test_invalid_mode_raises_error(self):
         """Test that invalid connection mode raises error."""
@@ -26,7 +26,7 @@ class TestConnectionManagement:
             with pytest.raises(ConnectionError, match="Socket path does not exist"):
                 connect_neovim(mode="socket", socket_path=socket_path)
 
-    @patch("nvim_mcp_server.connection.pynvim.attach")
+    @patch("nvimcp.connection.pynvim.attach")
     @patch("socket.socket")
     @patch("os.path.exists")
     def test_socket_connection_success(self, mock_exists, mock_socket, mock_attach):
@@ -45,10 +45,10 @@ class TestConnectionManagement:
         mock_exists.assert_called_with("/tmp/test.sock")
         mock_sock.connect.assert_called_with("/tmp/test.sock")
         mock_sock.close.assert_called_once()
-        mock_nvim.command.assert_called_with('echo "MCP server connected"')
+        mock_nvim.command.assert_called_with('echo "nvimcp server connected"')
         assert result == mock_nvim
 
-    @patch("nvim_mcp_server.connection.pynvim.attach")
+    @patch("nvimcp.connection.pynvim.attach")
     def test_embedded_connection_success(self, mock_attach):
         """Test successful embedded connection."""
         mock_nvim = Mock()
@@ -56,11 +56,11 @@ class TestConnectionManagement:
 
         result = connect_neovim(mode="embedded")
 
-        mock_nvim.command.assert_called_with('echo "MCP server connected (embedded)"')
+        mock_nvim.command.assert_called_with('echo "nvimcp server connected (embedded)"')
         assert result == mock_nvim
 
-    @patch("nvim_mcp_server.connection._connect_socket")
-    @patch("nvim_mcp_server.connection._connect_embedded")
+    @patch("nvimcp.connection._connect_socket")
+    @patch("nvimcp.connection._connect_embedded")
     def test_auto_mode_fallback(self, mock_embedded, mock_socket):
         """Test auto mode falls back to embedded when socket fails."""
         mock_socket.side_effect = ConnectionError("Socket failed")

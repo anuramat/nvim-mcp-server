@@ -4,8 +4,8 @@
 import asyncio
 import sys
 import logging
-from nvim_mcp_server.connection import connect_neovim
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.connection import connect_neovim
+from nvimcp.core import NvimcpServer
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -15,11 +15,11 @@ async def test_stdio_minimal():
     try:
         # Connect to Neovim
         nvim = connect_neovim("socket", "/tmp/nvim.sock")
-        print("✓ Connected to Neovim", file=sys.stderr)
+        print("✓ Connected to nvim", file=sys.stderr)
 
         # Create server
-        server = NeovimMCPServer(nvim)
-        print("✓ Created MCP server", file=sys.stderr)
+        server = NvimcpServer(nvim)
+        print("✓ Created nvimcp server", file=sys.stderr)
 
         # Test individual components
         from mcp.server.stdio import stdio_server

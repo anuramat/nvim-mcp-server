@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Standalone MCP server for Neovim."""
+"""Standalone nvimcp server."""
 
 import argparse
 import asyncio
 import logging
 import sys
-from nvim_mcp_server.connection import connect_neovim, ConnectionError
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.connection import connect_neovim, ConnectionError
+from nvimcp.core import NvimcpServer
 
 
 def setup_logging(level: str = "INFO"):
@@ -19,7 +19,7 @@ def setup_logging(level: str = "INFO"):
 
 async def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Neovim MCP Server")
+    parser = argparse.ArgumentParser(description="Nvimcp Server")
     parser.add_argument(
         "--mode",
         choices=["auto", "socket", "embedded"],
@@ -42,22 +42,22 @@ async def main():
     setup_logging(args.log_level)
 
     logger = logging.getLogger(__name__)
-    logger.info("Starting Neovim MCP Server")
+    logger.info("Starting nvimcp server")
 
     try:
         # Connect to Neovim
-        logger.info(f"Connecting to Neovim (mode: {args.mode})")
+        logger.info(f"Connecting to nvim (mode: {args.mode})")
         nvim = connect_neovim(mode=args.mode, socket_path=args.socket_path)
 
         # Create and run MCP server
-        server = NeovimMCPServer(nvim)
-        logger.info("MCP server ready")
+        server = NvimcpServer(nvim)
+        logger.info("nvimcp server ready")
 
         # Run MCP server
         await server.run()
 
     except ConnectionError as e:
-        logger.error(f"Failed to connect to Neovim: {e}")
+        logger.error(f"Failed to connect to nvim: {e}")
         sys.exit(1)
     except KeyboardInterrupt:
         logger.info("Shutting down")

@@ -1,5 +1,5 @@
 {
-  description = "MCP server for Neovim";
+  description = "Nvimcp server";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -20,8 +20,8 @@
         python = pkgs.python3;
         pythonPackages = python.pkgs;
 
-        nvim-mcp-server = pythonPackages.buildPythonPackage rec {
-          pname = "nvim-mcp-server";
+        nvimcp = pythonPackages.buildPythonPackage rec {
+          pname = "nvimcp";
           version = "0.1.0";
 
           src = ./.;
@@ -32,14 +32,14 @@
           ];
 
           meta = {
-            description = "MCP server that exposes Neovim functionality";
-            homepage = "https://github.com/anuramat/nvim-mcp-server";
+            description = "Nvimcp server that exposes nvim functionality";
+            homepage = "https://github.com/anuramat/nvimcp";
           };
         };
 
       in
       {
-        packages.default = nvim-mcp-server;
+        packages.default = nvimcp;
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             (python3.withPackages (

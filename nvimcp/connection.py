@@ -1,4 +1,4 @@
-"""Neovim connection management for MCP server."""
+"""Nvim connection management for nvimcp server."""
 
 import logging
 import asyncio
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConnectionError(Exception):
-    """Raised when connection to Neovim fails."""
+    """Raised when connection to nvim fails."""
 
     pass
 
@@ -20,15 +20,15 @@ def connect_neovim(
     nvim_args: Optional[list] = None,
 ) -> pynvim.Nvim:
     """
-    Connect to Neovim instance.
+    Connect to nvim instance.
 
     Args:
         mode: Connection mode - "auto", "socket", or "embedded"
-        socket_path: Path to Neovim socket (for socket mode)
+        socket_path: Path to nvim socket (for socket mode)
         nvim_args: Additional arguments for embedded mode
 
     Returns:
-        Connected Neovim instance
+        Connected nvim instance
 
     Raises:
         ConnectionError: If connection fails
@@ -55,7 +55,7 @@ def connect_neovim(
 
 
 def _connect_socket(socket_path: str) -> pynvim.Nvim:
-    """Connect to existing Neovim instance via socket."""
+    """Connect to existing nvim instance via socket."""
     try:
         # Use synchronous connection to avoid event loop conflicts
         import socket
@@ -82,7 +82,7 @@ def _connect_socket(socket_path: str) -> pynvim.Nvim:
         def connect_sync():
             try:
                 nvim = pynvim.attach("socket", path=socket_path)
-                nvim.command('echo "MCP server connected"')
+                nvim.command('echo "nvimcp server connected"')
                 nvim_result[0] = nvim
             except Exception as e:
                 error_result[0] = e
@@ -96,14 +96,14 @@ def _connect_socket(socket_path: str) -> pynvim.Nvim:
         if not nvim_result[0]:
             raise ConnectionError("Failed to connect - unknown error")
 
-        logger.info(f"Connected to Neovim via socket: {socket_path}")
+        logger.info(f"Connected to nvim via socket: {socket_path}")
         return nvim_result[0]
     except Exception as e:
         raise ConnectionError(f"Failed to connect via socket {socket_path}: {e}")
 
 
 def _connect_embedded(nvim_args: list) -> pynvim.Nvim:
-    """Start embedded Neovim instance."""
+    """Start embedded nvim instance."""
     try:
         import threading
 
@@ -113,7 +113,7 @@ def _connect_embedded(nvim_args: list) -> pynvim.Nvim:
         def connect_sync():
             try:
                 nvim = pynvim.attach("child", argv=nvim_args)
-                nvim.command('echo "MCP server connected (embedded)"')
+                nvim.command('echo "nvimcp server connected (embedded)"')
                 nvim_result[0] = nvim
             except Exception as e:
                 error_result[0] = e
@@ -127,7 +127,7 @@ def _connect_embedded(nvim_args: list) -> pynvim.Nvim:
         if not nvim_result[0]:
             raise ConnectionError("Failed to connect - unknown error")
 
-        logger.info(f"Started embedded Neovim: {' '.join(nvim_args)}")
+        logger.info(f"Started embedded nvim: {' '.join(nvim_args)}")
         return nvim_result[0]
     except Exception as e:
-        raise ConnectionError(f"Failed to start embedded Neovim: {e}")
+        raise ConnectionError(f"Failed to start embedded nvim: {e}")

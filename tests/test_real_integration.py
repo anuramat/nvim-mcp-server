@@ -1,4 +1,4 @@
-"""Integration test using real Neovim instance."""
+"""Integration test using real nvim instance."""
 
 import pytest
 import asyncio
@@ -6,15 +6,15 @@ import tempfile
 import os
 import sys
 import pynvim
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.core import NvimcpServer
 
 
-class TestRealNeovimIntegration:
-    """Test with actual Neovim instance."""
+class TestRealNvimIntegration:
+    """Test with actual nvim instance."""
 
     @pytest.fixture
     def real_nvim(self):
-        """Create a real embedded Neovim instance."""
+        """Create a real embedded nvim instance."""
         # Suppress child watcher deprecation warnings in Python 3.12+
         # These are unavoidable when using pynvim.attach('child') and will be
         # fixed when pynvim updates to use subprocess without child watchers
@@ -45,8 +45,8 @@ class TestRealNeovimIntegration:
 
     @pytest.mark.asyncio
     async def test_real_nvim_get_status(self, real_nvim):
-        """Test get_status with real Neovim instance."""
-        server = NeovimMCPServer(real_nvim)
+        """Test get_status with real nvim instance."""
+        server = NvimcpServer(real_nvim)
 
         result = await server._get_status()
 
@@ -64,8 +64,8 @@ class TestRealNeovimIntegration:
 
     @pytest.mark.asyncio
     async def test_real_nvim_buffer_operations(self, real_nvim):
-        """Test buffer operations with real Neovim."""
-        server = NeovimMCPServer(real_nvim)
+        """Test buffer operations with real nvim."""
+        server = NvimcpServer(real_nvim)
 
         # Test initial buffer content (should be empty)
         content_result = await server._get_buffer_content()
@@ -84,8 +84,8 @@ class TestRealNeovimIntegration:
 
     @pytest.mark.asyncio
     async def test_real_nvim_commands(self, real_nvim):
-        """Test command execution with real Neovim."""
-        server = NeovimMCPServer(real_nvim)
+        """Test command execution with real nvim."""
+        server = NvimcpServer(real_nvim)
 
         # Test echo command
         result = await server._run_command("echo 'test command'")
@@ -100,7 +100,7 @@ class TestRealNeovimIntegration:
     @pytest.mark.asyncio
     async def test_real_nvim_multiple_buffers(self, real_nvim):
         """Test multiple buffer handling."""
-        server = NeovimMCPServer(real_nvim)
+        server = NvimcpServer(real_nvim)
 
         # Get initial buffer count
         initial_status = await server._get_status()

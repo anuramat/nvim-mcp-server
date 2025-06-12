@@ -1,1 +1,1 @@
-"""Tests for nvim-mcp-server."""
+"""Tests for nvimcp."""

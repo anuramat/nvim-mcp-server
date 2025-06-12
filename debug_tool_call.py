@@ -5,8 +5,8 @@ import asyncio
 import sys
 import logging
 import traceback
-from nvim_mcp_server.connection import connect_neovim
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.connection import connect_neovim
+from nvimcp.core import NvimcpServer
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -16,11 +16,11 @@ async def test_tool_call_error():
     try:
         # Connect to Neovim
         nvim = connect_neovim("socket", "/tmp/nvim.sock")
-        print("✓ Connected to Neovim", file=sys.stderr)
+        print("✓ Connected to nvim", file=sys.stderr)
 
         # Create server
-        server = NeovimMCPServer(nvim)
-        print("✓ Created MCP server", file=sys.stderr)
+        server = NvimcpServer(nvim)
+        print("✓ Created nvimcp server", file=sys.stderr)
 
         # Test direct tool call (this should work)
         print("Testing direct tool call...", file=sys.stderr)
@@ -28,7 +28,7 @@ async def test_tool_call_error():
         print(f"✓ Direct call works: {result[0].text[:50]}...", file=sys.stderr)
 
         # Test MCP handler (this might cause the error)
-        print("Testing MCP handler...", file=sys.stderr)
+        print("Testing nvimcp handler...", file=sys.stderr)
         from mcp.types import CallToolRequest
 
         # Manually call the handler that MCP server would call

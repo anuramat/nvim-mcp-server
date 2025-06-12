@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with
 code in this repository.
 
-# nvim-mcp-server - Neovim MCP Server
+# nvimcp - Nvimcp Server
 
 ## Development Commands
 
@@ -18,7 +18,7 @@ code in this repository.
 **Linting & Formatting:**
 
 - `black .` - Format Python code
-- `mypy nvim_mcp_server/` - Type checking
+- `mypy nvimcp/` - Type checking
 
 **Development Environment:**
 
@@ -27,34 +27,34 @@ code in this repository.
 
 **Running the Server:**
 
-- `python standalone.py` - Run in standalone mode (embedded Neovim)
+- `python standalone.py` - Run in standalone mode (embedded nvim)
 - `python standalone.py --socket /tmp/nvim.sock` - Connect to socket
 - `python standalone.py --mode auto` - Auto-fallback from socket to embedded
 
 ## Architecture Overview
 
-MCP server exposing Neovim functionality to external MCP clients via Python and
+Nvimcp server exposing nvim functionality to external clients via Python and
 RPC. Currently implements **standalone mode only** - no plugin mode yet.
 
 **Core Components:**
 
-- `nvim_mcp_server/core.py` (201 lines) - Main MCP server with tool handlers
-- `nvim_mcp_server/connection.py` (129 lines) - Connection management for
+- `nvimcp/core.py` (201 lines) - Main nvimcp server with tool handlers
+- `nvimcp/connection.py` (129 lines) - Connection management for
   different modes
 - `standalone.py` (72 lines) - Standalone entry point with connection setup
 
 **Connection Modes (Standalone Only):**
 
-- **Embedded**: `pynvim.attach('child')` - Isolated headless Neovim instance
-- **Socket**: `pynvim.attach('socket')` - Connect to existing Neovim session
+- **Embedded**: `pynvim.attach('child')` - Isolated headless nvim instance
+- **Socket**: `pynvim.attach('socket')` - Connect to existing nvim session
 - **Auto**: Falls back from socket to embedded if socket unavailable
 
-**MCP Tools Currently Implemented (4 total):**
+**Nvimcp Tools Currently Implemented (4 total):**
 
 - `get_buffer_content` - Read buffer contents (current or specific buffer ID)
 - `edit_buffer` - Modify buffer text (full or partial replacement)
 - `run_command` - Execute Vim commands with output capture
-- `get_status` - Get Neovim status (mode, buffers, windows, cursor, cwd)
+- `get_status` - Get nvim status (mode, buffers, windows, cursor, cwd)
 
 **Not Yet Implemented:**
 
@@ -73,65 +73,65 @@ RPC. Currently implements **standalone mode only** - no plugin mode yet.
 
 ## Key Implementation Details
 
-The `NeovimMCPServer` class in `core.py` is connection-agnostic - it accepts any
+The `NvimcpServer` class in `core.py` is connection-agnostic - it accepts any
 `pynvim.Nvim` instance, allowing the same codebase to work in both standalone
 and plugin modes. Connection setup is handled separately in `connection.py` and
 `standalone.py`.
 
 All tools use async handlers and proper error handling with try/catch blocks
-that return meaningful error messages to MCP clients. The server uses the
-official Python MCP SDK with stdio transport.
+that return meaningful error messages to clients. The server uses the
+official Python SDK with stdio transport.
 
 ## Current Implementation Status
 
 **✅ Working Features:**
 
-- Standalone MCP server (fully functional)
-- Socket and embedded Neovim connection modes with auto-fallback
-- 4 working MCP tools: get_buffer_content, edit_buffer, run_command, get_status
-- Comprehensive test suite (22 tests passing - including real Neovim integration
+- Standalone nvimcp server (fully functional)
+- Socket and embedded nvim connection modes with auto-fallback
+- 4 working nvimcp tools: get_buffer_content, edit_buffer, run_command, get_status
+- Comprehensive test suite (22 tests passing - including real nvim integration
   tests)
 - TaskGroup/event loop conflict resolved using ThreadPoolExecutor
-- Compatible with external MCP clients (mcpcurl tested)
-- Proper MCP protocol implementation with JSON-RPC
+- Compatible with external clients (tested)
+- Proper protocol implementation with JSON-RPC
 - Python 3.12+ compatibility with deprecation warning handling
 
 **🔧 Key Technical Solutions:**
 
 - Event loop conflict fix: Use `concurrent.futures.ThreadPoolExecutor` instead
-  of `asyncio.get_event_loop().run_in_executor()` to avoid conflicts between MCP
+  of `asyncio.get_event_loop().run_in_executor()` to avoid conflicts between
   server's event loop and pynvim's async operations
 - Connection resilience: Auto-fallback from socket to embedded mode
-- Thread safety: Isolated thread pools for Neovim API calls
+- Thread safety: Isolated thread pools for nvim API calls
 - Python 3.12+ compatibility: Proper handling of asyncio child watcher
-  deprecation warnings in real Neovim integration tests
-- Comprehensive testing: Both mock-based unit tests and real Neovim integration
+  deprecation warnings in real nvim integration tests
+- Comprehensive testing: Both mock-based unit tests and real nvim integration
   tests for full coverage
 
 ## Next Steps
 
 ### 1. Plugin Mode Implementation
 
-Convert to a Neovim remote plugin to enable seamless integration:
+Convert to a nvim remote plugin to enable seamless integration:
 
 **Required Changes:**
 
-- Create `rplugin/python/nvim_mcp_server.py` with `@neovim.plugin` decorator
+- Create `rplugin/python/nvimcp.py` with `@neovim.plugin` decorator
 - Implement plugin-specific initialization using `nvim` instance from plugin
   host
 - Add plugin registration commands and autocommands
-- Handle plugin lifecycle (start/stop MCP server on demand)
+- Handle plugin lifecycle (start/stop nvimcp server on demand)
 
 **Benefits:**
 
 - No external process management required
-- Automatic startup with Neovim
-- Direct access to Neovim's Lua integration
+- Automatic startup with nvim
+- Direct access to nvim's Lua integration
 - Shared lifecycle and configuration
 
 ### 2. Enhanced Tool Set
 
-Expand MCP capabilities with additional tools:
+Expand nvimcp capabilities with additional tools:
 
 **High Priority:**
 

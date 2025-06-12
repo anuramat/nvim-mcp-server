@@ -1,18 +1,18 @@
-"""Tests for MCP tools."""
+"""Tests for nvimcp tools."""
 
 import pytest
 import asyncio
 from unittest.mock import Mock, AsyncMock, patch
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.core import NvimcpServer
 from mcp.types import TextContent
 
 
-class TestMCPTools:
-    """Test MCP tool implementations."""
+class TestNvimcpTools:
+    """Test nvimcp tool implementations."""
 
     @pytest.fixture
     def mock_nvim(self):
-        """Create a mock Neovim instance."""
+        """Create a mock nvim instance."""
         nvim = Mock()
         nvim.current.buffer = Mock()
         nvim.current.buffer.number = 1
@@ -48,8 +48,8 @@ class TestMCPTools:
 
     @pytest.fixture
     def server(self, mock_nvim):
-        """Create MCP server with mock Neovim."""
-        return NeovimMCPServer(mock_nvim)
+        """Create nvimcp server with mock nvim."""
+        return NvimcpServer(mock_nvim)
 
     @pytest.mark.asyncio
     async def test_get_buffer_content(self, server, mock_nvim):
@@ -123,7 +123,7 @@ class TestMCPTools:
 
     @pytest.mark.asyncio
     async def test_get_status(self, server, mock_nvim):
-        """Test getting Neovim status."""
+        """Test getting nvim status."""
         result = await server._get_status()
 
         assert len(result) == 1

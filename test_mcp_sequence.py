@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test proper MCP initialization sequence."""
+"""Test proper nvimcp initialization sequence."""
 
 import json
 import sys
@@ -7,8 +7,8 @@ import subprocess
 import time
 
 
-def send_mcp_messages():
-    """Send proper MCP initialization sequence."""
+def send_nvimcp_messages():
+    """Send proper nvimcp initialization sequence."""
 
     # Start the server process
     proc = subprocess.Popen(
@@ -87,4 +87,4 @@ def send_mcp_messages():
 
 
 if __name__ == "__main__":
-    send_mcp_messages()
+    send_nvimcp_messages()

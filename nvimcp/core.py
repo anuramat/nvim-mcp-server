@@ -1,4 +1,4 @@
-"""Core MCP server implementation."""
+"""Core nvimcp server implementation."""
 
 import asyncio
 import logging
@@ -11,16 +11,16 @@ from mcp.types import Tool, TextContent
 logger = logging.getLogger(__name__)
 
 
-class NeovimMCPServer:
-    """MCP server that exposes Neovim functionality."""
+class NvimcpServer:
+    """Nvimcp server that exposes nvim functionality."""
 
     def __init__(self, nvim: pynvim.Nvim):
         self.nvim = nvim
-        self.server = Server("neovim-mcp", version="0.1.0")
+        self.server = Server("nvimcp", version="0.1.0")
         self._setup_handlers()
 
     def _setup_handlers(self):
-        """Set up MCP server handlers."""
+        """Set up nvimcp server handlers."""
 
         @self.server.list_tools()
         async def handle_list_tools() -> List[Tool]:
@@ -81,7 +81,7 @@ class NeovimMCPServer:
                 ),
                 Tool(
                     name="get_status",
-                    description="Get Neovim status information",
+                    description="Get nvim status information",
                     inputSchema={"type": "object", "properties": {}},
                 ),
             ]

@@ -1,20 +1,20 @@
-"""Integration tests for MCP server."""
+"""Integration tests for nvimcp server."""
 
 import pytest
 import asyncio
 import tempfile
 import os
 from unittest.mock import Mock, patch
-from nvim_mcp_server.core import NeovimMCPServer
+from nvimcp.core import NvimcpServer
 from mcp.types import Tool
 
 
-class TestMCPIntegration:
-    """Test MCP server integration."""
+class TestNvimcpIntegration:
+    """Test nvimcp server integration."""
 
     @pytest.fixture
     def mock_nvim(self):
-        """Create a mock Neovim instance."""
+        """Create a mock nvim instance."""
         nvim = Mock()
         nvim.current.buffer = Mock()
         nvim.current.buffer.number = 1
@@ -47,16 +47,16 @@ class TestMCPIntegration:
         return nvim
 
     def test_server_initialization(self, mock_nvim):
-        """Test MCP server initializes correctly."""
-        server = NeovimMCPServer(mock_nvim)
+        """Test nvimcp server initializes correctly."""
+        server = NvimcpServer(mock_nvim)
 
         assert server.nvim == mock_nvim
-        assert server.server.name == "neovim-mcp"
+        assert server.server.name == "nvimcp"
         assert server.server.version == "0.1.0"
 
     def test_list_tools(self, mock_nvim):
         """Test listing available tools."""
-        server = NeovimMCPServer(mock_nvim)
+        server = NvimcpServer(mock_nvim)
 
         # Verify server has the expected tool functionality by testing setup
         expected_tools = [
@@ -68,13 +68,13 @@ class TestMCPIntegration:
 
         # Check that server initialized properly
         assert server.server is not None
-        assert server.server.name == "neovim-mcp"
+        assert server.server.name == "nvimcp"
         assert len(expected_tools) == 4
 
     @pytest.mark.asyncio
     async def test_tool_execution_workflow(self, mock_nvim):
         """Test complete tool execution workflow."""
-        server = NeovimMCPServer(mock_nvim)
+        server = NvimcpServer(mock_nvim)
 
         # Test get_buffer_content
         result = await server._get_buffer_content()
@@ -94,7 +94,7 @@ class TestMCPIntegration:
 
     def test_server_error_isolation(self, mock_nvim):
         """Test that errors in one tool don't affect others."""
-        server = NeovimMCPServer(mock_nvim)
+        server = NvimcpServer(mock_nvim)
 
         # Break one operation
         mock_nvim.current.buffer.__getitem__.side_effect = Exception("Test error")
@@ -113,7 +113,7 @@ class TestMCPIntegration:
     @pytest.mark.asyncio
     async def test_concurrent_tool_calls(self, mock_nvim):
         """Test handling concurrent tool calls."""
-        server = NeovimMCPServer(mock_nvim)
+        server = NvimcpServer(mock_nvim)
 
         # Execute multiple tools concurrently
         tasks = [
