@@ -20,51 +20,45 @@
         python = pkgs.python3;
         pythonPackages = python.pkgs;
 
-        mcp-neovim = pythonPackages.buildPythonPackage rec {
-          pname = "mcp-neovim";
+        nvim-mcp-server = pythonPackages.buildPythonPackage rec {
+          pname = "nvim-mcp-server";
           version = "0.1.0";
 
           src = ./.;
 
           propagatedBuildInputs = with pythonPackages; [
             pynvim
-            mcp # Official Python MCP SDK
+            mcp
             msgpack
             setuptools
           ];
 
           meta = {
             description = "MCP server that exposes Neovim functionality";
-            homepage = "https://github.com/anuramat/mcp.nvim";
+            homepage = "https://github.com/anuramat/nvim-mcp-server";
           };
         };
 
       in
       {
-        packages.default = mcp-neovim;
-
+        packages.default = nvim-mcp-server;
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            python
-            pythonPackages.pynvim
-            pythonPackages.mcp # Official Python MCP SDK
-            pythonPackages.msgpack
-            pythonPackages.setuptools
-            pythonPackages.pytest
-            pythonPackages.pytest-asyncio
-            pythonPackages.black
-            pythonPackages.mypy
+            (python3.withPackages (
+              p: with p; [
+                pynvim
+                mcp
+                msgpack
+                setuptools
+                pytest
+                pytest-asyncio
+                black
+                mypy
+              ]
+            ))
             pyright
-            neovim # For testing
+            neovim
           ];
-
-          shellHook = ''
-            echo "MCP Neovim development environment"
-            echo "Python: $(python --version)"
-            echo "Available packages: pynvim, mcp, msgpack, pytest, black, mypy"
-            echo ""
-            export PYTHONPATH="$PWD:$PYTHONPATH"
-          '';
         };
       }
     );
