@@ -5,8 +5,8 @@ import asyncio
 import sys
 import logging
 import traceback
-from mcp_neovim.connection import connect_neovim
-from mcp_neovim.core import NeovimMCPServer
+from nvim_mcp_server.connection import connect_neovim
+from nvim_mcp_server.core import NeovimMCPServer
 
 logging.basicConfig(level=logging.DEBUG)
 

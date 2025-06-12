@@ -18,7 +18,7 @@ code in this repository.
 **Linting & Formatting:**
 
 - `black .` - Format Python code
-- `mypy mcp_neovim/` - Type checking
+- `mypy nvim_mcp_server/` - Type checking
 
 **Development Environment:**
 
@@ -38,9 +38,9 @@ RPC. Currently implements **standalone mode only** - no plugin mode yet.
 
 **Core Components:**
 
-- `mcp_neovim/core.py` (201 lines) - Main MCP server with tool handlers
-- `mcp_neovim/connection.py` (129 lines) - Connection management for different
-  modes
+- `nvim_mcp_server/core.py` (201 lines) - Main MCP server with tool handlers
+- `nvim_mcp_server/connection.py` (129 lines) - Connection management for
+  different modes
 - `standalone.py` (72 lines) - Standalone entry point with connection setup
 
 **Connection Modes (Standalone Only):**
@@ -116,7 +116,7 @@ Convert to a Neovim remote plugin to enable seamless integration:
 
 **Required Changes:**
 
-- Create `rplugin/python/mcp_neovim.py` with `@neovim.plugin` decorator
+- Create `rplugin/python/nvim_mcp_server.py` with `@neovim.plugin` decorator
 - Implement plugin-specific initialization using `nvim` instance from plugin
   host
 - Add plugin registration commands and autocommands

@@ -5,8 +5,8 @@ import argparse
 import asyncio
 import logging
 import sys
-from mcp_neovim.connection import connect_neovim, ConnectionError
-from mcp_neovim.core import NeovimMCPServer
+from nvim_mcp_server.connection import connect_neovim, ConnectionError
+from nvim_mcp_server.core import NeovimMCPServer
 
 
 def setup_logging(level: str = "INFO"):

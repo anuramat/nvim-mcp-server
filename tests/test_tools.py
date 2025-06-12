@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 from unittest.mock import Mock, AsyncMock, patch
-from mcp_neovim.core import NeovimMCPServer
+from nvim_mcp_server.core import NeovimMCPServer
 from mcp.types import TextContent
 
 

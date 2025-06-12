@@ -5,7 +5,7 @@ import asyncio
 import tempfile
 import os
 from unittest.mock import Mock, patch
-from mcp_neovim.core import NeovimMCPServer
+from nvim_mcp_server.core import NeovimMCPServer
 from mcp.types import Tool
 
 

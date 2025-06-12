@@ -6,7 +6,7 @@ import tempfile
 import os
 import sys
 import pynvim
-from mcp_neovim.core import NeovimMCPServer
+from nvim_mcp_server.core import NeovimMCPServer
 
 
 class TestRealNeovimIntegration:
